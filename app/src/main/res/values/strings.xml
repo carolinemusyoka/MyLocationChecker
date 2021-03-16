@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MyLocationChecker</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="find_user_s_location">Find User\'s Location</string>
+</resources>
