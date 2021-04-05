@@ -1,6 +1,5 @@
 package com.carolmusyoka.mylocationchecker
 
-import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.database.IgnoreExtraProperties
 
 @IgnoreExtraProperties

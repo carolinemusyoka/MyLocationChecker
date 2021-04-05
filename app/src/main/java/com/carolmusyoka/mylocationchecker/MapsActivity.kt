@@ -33,26 +33,30 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+            // Get a reference from the database so that the app can read and write operations
             dbReference = Firebase.database.reference
-            dbReference.addValueEventListener(locationListener)
+            dbReference.addValueEventListener(locListener)
     }
 
-    val locationListener = object : ValueEventListener {
+    val locListener = object : ValueEventListener {
         //     @SuppressLint("LongLogTag")
         override fun onDataChange(snapshot: DataSnapshot) {
             if(snapshot.exists()){
+                //get the exact longitude and latitude from the database "test"
                 val location = snapshot.child("test").getValue(LocationInfo::class.java)
-                var locationLat = location?.latitude
-                var locationLong = location?.longitude
+                val locationLat = location?.latitude
+                val locationLong = location?.longitude
                 find_location_btn.setOnClickListener {
 
-
+                    // check if the latitude and longitude is not null
                     if (locationLat != null && locationLong!= null) {
+                        // create a LatLng object from location
                         val latLng = LatLng(locationLat, locationLong)
+                        //create a marker at the read location and display it on the map
                         map.addMarker(MarkerOptions().position(latLng)
                                 .title("The user is currently here"))
                         val update = CameraUpdateFactory.newLatLngZoom(latLng, 16.0f)
-
+                        //update the camera with the CameraUpdate object
                         map.moveCamera(update)
                     }
                     else {
@@ -63,26 +67,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
             }
         }
-
+        // show this toast if there is an error while reading from the database
         override fun onCancelled(error: DatabaseError) {
                 Toast.makeText(applicationContext, "Could not read from database", Toast.LENGTH_LONG).show()
         }
 
     }
 
-
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     override fun onMapReady(googleMap: GoogleMap) {
-        map = googleMap
+        map = googleMap //initialize map when the map is ready
 
     }
     companion object {
